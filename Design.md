@@ -25,3 +25,7 @@ Inicio, Animales (lista/alta/detalle/edición), Potreros, Producción, Reproducc
 
 - Tarjeta animal: `item_animal_card.xml`
 - Bottom nav 5 ítems: `activity_main.xml`
+
+## Nueva especificación de diseño (Compose + Material 3)
+
+La especificación vigente del frontend está en [docs/design/00-README.md](docs/design/00-README.md): sistema de diseño, migración de XML a Jetpack Compose, catálogo de componentes, navegación y una ficha por pantalla. Los tokens de esta página quedan como referencia histórica; ante cualquier diferencia, manda `docs/design/01-design-system.md`.
