@@ -19,12 +19,11 @@ Documentación raíz: [todo.md](todo.md), [Memoria.md](Memoria.md), [Design.md](
 # Base de datos
 docker compose -f infra/docker-compose.yml up -d
 
-# API
+# API (PostgreSQL debe estar arriba; migrar ANTES del seed)
 cd backend
 cp .env.example .env
 npm install
-npx prisma migrate deploy
-npx prisma db seed
+npm run db:setup
 npm run start:dev
 ```
 

@@ -4,6 +4,14 @@
 
 PostgreSQL 16 en Docker (`infra/docker-compose.yml`).
 
+## Credenciales demo (tras seed)
+
+| Campo | Valor |
+|-------|--------|
+| Usuario API | `demo@agrocontrol.local` |
+| Contraseña | `demo1234` |
+| PostgreSQL | usuario `agro`, contraseña `agro_secret`, BD `agrocontrol` |
+
 ## ER (resumen)
 
 ```mermaid
@@ -25,13 +33,16 @@ docker compose -f infra/docker-compose.yml up -d
 cd backend
 cp .env.example .env
 npm install
-npx prisma migrate dev --name init   # primera vez (genera migración)
-# o: npx prisma migrate deploy      # CI / sin cambios de esquema
-npx prisma db seed
+npm run db:setup
 ```
+
+- **`npm run db:setup`**: genera cliente Prisma, aplica migraciones (`migrate deploy`) y carga datos semilla (`db seed`).
+- **`npm run db:seed`**: solo vuelve a ejecutar el seed (requiere tablas ya creadas).
 
 Adminer: http://localhost:8080 (servidor `postgres`, usuario `agro`, BD `agrocontrol`).
 
-## Esquema
+## Esquema y semilla
 
-Definido en [`backend/prisma/schema.prisma`](../../backend/prisma/schema.prisma).
+- Esquema: [`backend/prisma/schema.prisma`](../../backend/prisma/schema.prisma)
+- Migración inicial: [`backend/prisma/migrations/20260314140000_init/migration.sql`](../../backend/prisma/migrations/20260314140000_init/migration.sql)
+- Datos semilla: [`backend/prisma/seed.ts`](../../backend/prisma/seed.ts) (idempotente, IDs `seed-*`)
