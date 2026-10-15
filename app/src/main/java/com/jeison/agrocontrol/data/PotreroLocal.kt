@@ -10,6 +10,11 @@ data class PotreroLocal(
     val nombre: String,
     val areaHectareas: Double?,
     val estado: String,
+    val tipoPasto: String,
+    val fechaUltimaSiembra: String,
+    val fechaProximoUso: String,
+    val observacion: String,
     val especiesJson: String,
+    val syncState: String = "SYNCED",
     val updatedAtEpoch: Long,
 )

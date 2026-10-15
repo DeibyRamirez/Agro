@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
         android:name=".AgroControlApp"
@@ -17,30 +18,15 @@
         android:theme="@style/Theme.AgroControl"
         tools:targetApi="31">
         <activity
-            android:name=".LoginActivity"
-            android:exported="true">
+            android:name=".MainActivity"
+            android:exported="true"
+            android:theme="@style/Theme.AgroControl.Splash"
+            android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".AgregarAnimalActivity" android:exported="false" />
-        <activity android:name=".DetalleAnimalActivity" android:exported="false" />
-        <activity
-            android:name=".MainActivity"
-            android:exported="false"
-            android:windowSoftInputMode="adjustResize" />
-        <activity
-            android:name=".AnimalesActivity"
-            android:exported="false"
-            android:windowSoftInputMode="adjustResize" />
-        <activity android:name=".PotrerosActivity" android:exported="false" />
-        <activity android:name=".ProduccionActivity" android:exported="false" />
-        <activity android:name=".FinanzasActivity" android:exported="false" />
-        <activity android:name=".ReportesActivity" android:exported="false" />
-        <activity android:name=".PendientesActivity" android:exported="false" />
-        <activity android:name=".ReproduccionActivity" android:exported="false" />
-        <activity android:name=".MasActivity" android:exported="false" />
     </application>
 
 </manifest>

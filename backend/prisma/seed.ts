@@ -185,19 +185,19 @@ async function main() {
     {
       id: 'seed-repro-1',
       animalId: 'seed-animal-024',
-      tipo: 'Inseminación',
+      tipo: 'INSEMINACION' as const,
       programada: '2026-10-02',
     },
     {
       id: 'seed-repro-2',
       animalId: 'seed-animal-002',
-      tipo: 'Celo detectado',
+      tipo: 'CELO' as const,
       programada: '2026-10-20',
     },
     {
       id: 'seed-repro-3',
       animalId: 'seed-animal-001',
-      tipo: 'Revisión post-parto',
+      tipo: 'DIAGNOSTICO' as const,
       programada: '2026-11-05',
     },
   ] as const;

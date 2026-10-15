@@ -47,6 +47,9 @@ Principios que gobiernan todas las decisiones:
 | [screens/18-produccion-registrar.md](screens/18-produccion-registrar.md) | Registrar producción de leche |
 | [screens/19-reproduccion-registrar.md](screens/19-reproduccion-registrar.md) | Registrar evento reproductivo |
 | [screens/20-potrero-trabajo-registrar.md](screens/20-potrero-trabajo-registrar.md) | Registrar trabajo de potrero |
+| [screens/21-perfil.md](screens/21-perfil.md) | Perfil (lectura, `auth/me`) |
+
+**Entrega del proyecto (estado actual app + API):** [`docs/ENTREGA.md`](../ENTREGA.md) y [`docs/entrega/ANDROID-APP.md`](../entrega/ANDROID-APP.md).
 
 ## 3. Cómo usar estos documentos con Cursor
 

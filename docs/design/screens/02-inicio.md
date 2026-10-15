@@ -5,10 +5,16 @@ Ruta: `inicio` (tab 1). Reemplaza `MainActivity` (dashboard) + `activity_main.xm
 ## Propósito
 En 3 segundos el usuario sabe: cómo va la finca, qué tiene pendiente hoy, y si sus datos están enviados. Puerta a los módulos secundarios.
 
+## Encabezado (implementado)
+
+- Fila superior con **`statusBarsPadding()`** para respetar barra de estado (safe area).
+- Saludo + fecha a la izquierda; a la derecha: **campana** (→ Pendientes, badge opcional) e icono **Perfil** (→ `Dest.Perfil`, pantalla [`21-perfil.md`](21-perfil.md)).
+- Componente: `InicioHomeHeader` en `InicioScreen.kt`.
+
 ## Wireframe
 ```text
 ┌────────────────────────────────────┐
-│ Buenos días                        │  headlineMedium (saludo por hora)
+│ Buenos días         (Campana)(Perfil)│  statusBarsPadding; Perfil → perfil
 │ Miércoles 14 de octubre            │  bodyLarge onSurfaceVariant
 ├────────────────────────────────────┤
 │ [SyncStatusBanner si aplica]       │
@@ -114,7 +120,7 @@ Frame 4 "Dashboard".
 |---|---|---|
 | "Hola, Ganadero" | "Hola, {nombre}" si hay nombre guardado; si no, saludo por hora "Buenos días" (sin inventar "Ganadero") | [UI] / perfil [Backend] |
 | Campana | Abre Pendientes; badge = vencidas + hoy. No hay API de notificaciones | [Existe] `LocalCacheDao.pendingTasks()` |
-| Perfil | Abre Más (sección Cuenta) | [UI] |
+| Perfil | Abre pantalla **Perfil** (`GET /auth/me`, solo lectura) | [Existe] ver [21-perfil.md](21-perfil.md) |
 | KPI Producción "120 L" | Mostrar **litros de hoy** si hay registros de hoy, si no "litros esta semana" (`DashboardSummary.litrosLecheSemana`). Caption explícito para no confundir | [Existe] |
 | KPI Reproducción "8" | `DashboardSummary.eventosReproduccion` | [Existe] (requiere red) |
 | Pendientes con fecha 03/10 | `dd/MM` si es del año actual | [Existe] |

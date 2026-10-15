@@ -1,4 +1,4 @@
-import { ProductType } from '@prisma/client';
+import { JornadaOrdeno, ProductType } from '@prisma/client';
 import { IsDateString, IsEnum, IsNumber, IsOptional, IsString, Min } from 'class-validator';
 
 export class CreateProductionDto {
@@ -14,6 +14,9 @@ export class CreateProductionDto {
 
   @IsDateString()
   fecha!: string;
+
+  @IsEnum(JornadaOrdeno)
+  jornada!: JornadaOrdeno;
 
   @IsOptional()
   @IsString()

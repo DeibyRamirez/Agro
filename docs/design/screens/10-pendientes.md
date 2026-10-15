@@ -33,7 +33,10 @@ Lista de trabajo del día: qué está vencido, qué vence hoy y qué viene.
 - Badge de la campana en Inicio = vencidas + hoy.
 
 ## Acciones
-v1 es solo lectura (no existe endpoint ni outbox para completar tareas). No mostrar checkbox de completar. Documentar para v2: botón "Marcar como hecha" de 56 dp con confirmación y outbox `TASK/UPDATE`.
+- **Marcar terminado:** `Checkbox` al inicio de cada `TaskListItem` (área táctil ≥ 48 dp) en Pendientes, Inicio (“Pendientes de hoy”) y detalle de potrero.
+- Local: `status = COMPLETED` (UI “Terminado”); deja de aparecer en `pendingTasks()` (`PENDING` only).
+- Sync offline-first: outbox `PENDING_TASK` / `UPDATE` con payload `{ status: COMPLETED }` → backend `tasks.complete` vía `sync/push`. Tras crear offline (`local-*`) y completar antes del push, el UPDATE se encola al recibir el `serverId`.
+- Tap en el resto del ítem abre detalle (`TaskDetailDialog`: ref, vencimiento, observaciones).
 
 ## Estados
 - Vacío: `EmptyState(Exito, "Todo al día", "No tienes tareas pendientes.")` en `successContainer`.

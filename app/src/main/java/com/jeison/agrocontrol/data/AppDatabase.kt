@@ -15,8 +15,9 @@ import androidx.sqlite.db.SupportSQLiteDatabase
         PotreroLocal::class,
         PendingTaskLocal::class,
         ProductionLocal::class,
+        ReproductionEventLocal::class,
     ],
-    version = 2,
+    version = 4,
     exportSchema = false,
 )
 abstract class AppDatabase : RoomDatabase() {
@@ -94,6 +95,37 @@ abstract class AppDatabase : RoomDatabase() {
             }
         }
 
+        private val MIGRATION_3_4 = object : Migration(3, 4) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL("ALTER TABLE potreros ADD COLUMN tipoPasto TEXT NOT NULL DEFAULT ''")
+                db.execSQL("ALTER TABLE potreros ADD COLUMN fechaUltimaSiembra TEXT NOT NULL DEFAULT ''")
+                db.execSQL("ALTER TABLE potreros ADD COLUMN fechaProximoUso TEXT NOT NULL DEFAULT ''")
+                db.execSQL("ALTER TABLE potreros ADD COLUMN observacion TEXT NOT NULL DEFAULT ''")
+                db.execSQL("ALTER TABLE potreros ADD COLUMN syncState TEXT NOT NULL DEFAULT 'SYNCED'")
+                db.execSQL("ALTER TABLE production_records ADD COLUMN jornada TEXT NOT NULL DEFAULT 'MANANA'")
+                db.execSQL("ALTER TABLE production_records ADD COLUMN animalServerId TEXT NOT NULL DEFAULT ''")
+                db.execSQL("ALTER TABLE production_records ADD COLUMN animalCodigo TEXT NOT NULL DEFAULT ''")
+                db.execSQL("ALTER TABLE production_records ADD COLUMN syncState TEXT NOT NULL DEFAULT 'SYNCED'")
+                db.execSQL("ALTER TABLE pending_tasks ADD COLUMN workType TEXT NOT NULL DEFAULT ''")
+                db.execSQL("ALTER TABLE pending_tasks ADD COLUMN observacion TEXT NOT NULL DEFAULT ''")
+                db.execSQL("ALTER TABLE pending_tasks ADD COLUMN syncState TEXT NOT NULL DEFAULT 'SYNCED'")
+                db.execSQL(
+                    """
+                    CREATE TABLE IF NOT EXISTS reproduction_events (
+                        serverId TEXT NOT NULL PRIMARY KEY,
+                        animalServerId TEXT NOT NULL,
+                        animalCodigo TEXT NOT NULL,
+                        tipoEvento TEXT NOT NULL,
+                        programada TEXT NOT NULL,
+                        notas TEXT NOT NULL,
+                        syncState TEXT NOT NULL DEFAULT 'SYNCED',
+                        updatedAtEpoch INTEGER NOT NULL
+                    )
+                    """.trimIndent(),
+                )
+            }
+        }
+
         @Volatile
         private var instance: AppDatabase? = null
 
@@ -104,10 +136,11 @@ abstract class AppDatabase : RoomDatabase() {
                     AppDatabase::class.java,
                     "agrocontrol.db",
                 )
-                    .addMigrations(MIGRATION_1_2)
+                    .addMigrations(MIGRATION_1_2, MIGRATION_3_4)
                     .fallbackToDestructiveMigration()
                     .build()
                     .also { instance = it }
             }
     }
 }
+

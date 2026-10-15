@@ -5,6 +5,8 @@ export enum SyncEntityDto {
   ANIMAL = 'ANIMAL',
   PRODUCTION_RECORD = 'PRODUCTION_RECORD',
   PENDING_TASK = 'PENDING_TASK',
+  POTRERO = 'POTRERO',
+  REPRODUCTION_EVENT = 'REPRODUCTION_EVENT',
 }
 
 export class SyncChangeDto {

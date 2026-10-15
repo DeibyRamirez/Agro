@@ -1,5 +1,7 @@
 # Memoria del proyecto AgroControl / AgroGest
 
+> **Documentación vigente para entrega y presentación:** [`docs/ENTREGA.md`](docs/ENTREGA.md). Este archivo conserva decisiones tempranas del proyecto.
+
 ## Propósito
 
 App para agropecuarios: animales, potreros, productividad (leche, carne, etc.), producción, reportes semanales/mensuales y trabajos pendientes.

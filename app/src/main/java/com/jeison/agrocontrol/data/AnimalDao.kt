@@ -37,4 +37,7 @@ interface AnimalDao {
 
     @Update
     suspend fun update(animal: Animal)
+
+    @Query("DELETE FROM animales")
+    suspend fun deleteAll()
 }

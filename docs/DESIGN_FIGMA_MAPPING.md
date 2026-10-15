@@ -1,63 +1,40 @@
-# Mapeo AgroGest (Figma) ↔ AgroControl (Android)
+# Mapeo AgroGest (Figma) ↔ AgroControl (Android Compose)
 
 **Figma:** [AgroGest](https://www.figma.com/design/WeMBtK1xWP0qNTtwllbwcL/AgroGest?node-id=0-1)
 
-Este documento enlaza el diseño de referencia con los layouts y pantallas del repositorio. Si exportas frames desde Figma, añade capturas en `docs/figma/` y actualiza la columna **Frame Figma**.
+UI implementada en **Jetpack Compose** (Material 3, sistema «Campo» en `docs/design/01-design-system.md`).
 
-## Design tokens (implementados en código)
+## Design tokens
 
-| Token | Valor | Uso en app |
-|-------|-------|------------|
-| `primary` | `#21852A` | Header, botones, enlaces activos |
-| `textPrimary` | `#26352A` | Títulos de sección |
-| `textBody` | `#444444` | Detalle en tarjetas |
-| `textMuted` | `#666666` | Subtítulos |
-| `surfaceList` | `#F5F7F5` | Fondo listado animales |
-| `surfaceCard` | `#FFFFFF` | Tarjetas |
-| `chipSexoBg` | `#E7F3E7` | Badge sexo |
-| `kpiAnimales` | `#91DF87` / `#174B20` | Tarjeta dashboard animales |
-| `kpiProduccion` | `#A8D9FF` | Tarjeta producción |
-| `kpiPotreros` | `#E7FF80` / `#35512C` | Tarjeta potreros |
-| `kpiReproduccion` | `#F1B6B9` / `#542020` | Tarjeta reproducción |
-| `kpiReportes` | `#C9A8E5` / `#342144` | CTA reportes |
-| `inputBg` | `#F4F0F0` | Campos de formulario |
-
-Centralizar en [`app/src/main/res/values/colors.xml`](../app/src/main/res/values/colors.xml) es recomendable en iteraciones futuras.
+Centralizados en [`app/src/main/java/com/jeison/agrocontrol/ui/theme/Color.kt`](../app/src/main/java/com/jeison/agrocontrol/ui/theme/Color.kt) (primary `#2E6B30`, fondos cálidos, tarjetas con borde).
 
 ## Pantallas
 
-| Frame Figma (nombre sugerido) | Layout Android | Activity | Estado |
-|------------------------------|----------------|----------|--------|
-| Inicio / Dashboard | `activity_main.xml` | `MainActivity` | KPI animales dinámico; resto demo + Toast |
-| Animales — lista | `activity_animales.xml` | `AnimalesActivity` | Lista Room, búsqueda, detalle |
-| Animales — alta | `activity_agregar_animal.xml` | `AgregarAnimalActivity` | Formulario + Room |
-| Animales — detalle | `activity_detalle_animal.xml` | `DetalleAnimalActivity` | Ficha; edición/módulos próximamente |
-| Producción | — | — | Pendiente |
-| Potreros | — | — | Pendiente |
-| Reproducción | — | — | Pendiente |
-| Finanzas | — | — | Pendiente |
-| Reportes | — | — | Pendiente |
-| Más | — | — | Pendiente |
+| Frame Figma | Ruta Compose | Paquete | Estado |
+|-------------|--------------|---------|--------|
+| Splash / COMENZAR | Splash sistema + `bienvenida` | `ui/feature/auth` | OK |
+| Iniciar sesión | `login` | `ui/feature/auth` | OK |
+| Crear cuenta | `registro` | `ui/feature/auth` | OK |
+| Dashboard | `inicio` | `ui/feature/inicio` | KPI + pendientes + sync |
+| Animales — lista | `animales` | `ui/feature/animales` | OK |
+| Animales — alta / edición | `animales/nuevo`, `animales/{codigo}/editar` | `ui/feature/animales` | OK |
+| Animales — detalle | `animales/detalle/{codigo}` | `ui/feature/animales` | Tabs info; prod/repro placeholder |
+| Producción | `produccion` | `ui/feature/produccion` | Datos locales |
+| Potreros | `potreros`, `potreros/{serverId}` | `ui/feature/potreros` | OK |
+| Reproducción | `reproduccion` | `ui/feature/reproduccion` | Placeholder (FeatureFlags) |
+| Finanzas | `finanzas` | `ui/feature/finanzas` | Rubros locales |
+| Reportes | `reportes` | `ui/feature/reportes` | API weekly/monthly |
+| Pendientes | `pendientes` | `ui/feature/pendientes` | OK |
+| Más | `mas` | `ui/feature/mas` | Sync, tema, logout |
 
 ## Componentes
 
-| Componente Figma | Recurso Android |
-|------------------|-----------------|
-| Tarjeta animal | `item_animal_card.xml` |
-| Barra inferior 5 ítems | Sección inferior en `activity_main.xml` |
-| Campo búsqueda | `etBuscarAnimal` en `activity_animales.xml` |
+| Componente | Archivo |
+|------------|---------|
+| Scaffold, KPI, listas, banner sync | [`ui/components/AgroComponents.kt`](../app/src/main/java/com/jeison/agrocontrol/ui/components/AgroComponents.kt) |
+| Barra inferior 5 ítems | [`ui/navigation/AgroNavHost.kt`](../app/src/main/java/com/jeison/agrocontrol/ui/navigation/AgroNavHost.kt) |
+| Iconos | [`ui/theme/AgroIcons.kt`](../app/src/main/java/com/jeison/agrocontrol/ui/theme/AgroIcons.kt) |
 
-## Flujos
+## Activity
 
-```text
-MainActivity → (tarjeta/nav Animales) → AnimalesActivity
-AnimalesActivity → AgregarAnimalActivity → guarda en Room → vuelve a lista
-AnimalesActivity → tap tarjeta → DetalleAnimalActivity
-```
-
-## Cómo completar el mapeo con Figma
-
-1. En Figma, exportar lista de páginas/frames (Dev Mode o plugin "Design Doc").
-2. Anotar tipografía (familia, pesos, tamaños) y radios si difieren de los XML.
-3. Añadir filas a la tabla de pantallas con el nombre exacto del frame.
-4. Opcional: plugin Figma-to-Android solo para referencia; este proyecto usa XML manual + View Binding.
+Una sola: [`MainActivity.kt`](../app/src/main/java/com/jeison/agrocontrol/MainActivity.kt) con `AgroNavHost`.

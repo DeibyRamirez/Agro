@@ -44,4 +44,37 @@ class AnimalRepository(
         syncScheduler?.schedule()
         return id
     }
+
+    suspend fun updateAnimal(codigo: String, data: Animal) {
+        val existing = animalDao.findByCodigo(codigo)
+            ?: throw IllegalArgumentException("Animal no encontrado")
+        val updated = data.copy(
+            id = existing.id,
+            serverId = existing.serverId,
+            codigo = existing.codigo,
+            syncState = Animal.SyncState.PENDING.name,
+            updatedAtEpoch = System.currentTimeMillis(),
+        )
+        animalDao.update(updated)
+        val payload = mapOf(
+            "nombre" to updated.nombre,
+            "tipo" to updated.tipo,
+            "raza" to updated.raza,
+            "sexo" to updated.sexo,
+            "peso" to updated.peso,
+            "fechaNacimiento" to updated.fechaNacimiento,
+            "potreroNombre" to updated.potrero,
+            "observacion" to updated.observacion,
+        )
+        syncDao.enqueue(
+            SyncOutbox(
+                entity = "ANIMAL",
+                operation = if (existing.serverId.isNullOrBlank()) "CREATE" else "UPDATE",
+                localId = existing.id.toString(),
+                serverId = existing.serverId,
+                payloadJson = gson.toJson(payload),
+            ),
+        )
+        syncScheduler?.schedule()
+    }
 }

@@ -20,7 +20,15 @@ class TokenStore(context: Context) {
             .apply()
     }
 
+    fun saveActiveFincaId(fincaId: String) {
+        prefs.edit().putString(KEY_FINCA_ID, fincaId).apply()
+    }
+
+    fun getActiveFincaId(): String? = prefs.getString(KEY_FINCA_ID, null)
+
     fun getAccessToken(): String? = prefs.getString(KEY_ACCESS, null)
+
+    fun getRefreshToken(): String? = prefs.getString(KEY_REFRESH, null)
 
     fun clear() {
         prefs.edit().clear().apply()
@@ -31,5 +39,6 @@ class TokenStore(context: Context) {
     companion object {
         private const val KEY_ACCESS = "access_token"
         private const val KEY_REFRESH = "refresh_token"
+        private const val KEY_FINCA_ID = "active_finca_id"
     }
 }

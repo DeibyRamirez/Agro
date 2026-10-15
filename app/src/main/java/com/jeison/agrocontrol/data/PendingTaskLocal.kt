@@ -12,5 +12,8 @@ data class PendingTaskLocal(
     val status: String,
     val vencimiento: String,
     val referencia: String,
+    val workType: String,
+    val observacion: String,
+    val syncState: String = "SYNCED",
     val updatedAtEpoch: Long,
 )

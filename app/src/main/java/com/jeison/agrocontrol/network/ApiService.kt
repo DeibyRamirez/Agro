@@ -12,6 +12,12 @@ interface ApiService {
     @POST("auth/register")
     suspend fun register(@Body body: RegisterRequest): TokenResponse
 
+    @POST("auth/refresh")
+    suspend fun refresh(@Body body: RefreshRequest): TokenResponse
+
+    @GET("auth/me")
+    suspend fun me(): UserMeResponse
+
     @GET("dashboard/summary")
     suspend fun dashboardSummary(): DashboardSummary
 
@@ -29,4 +35,7 @@ interface ApiService {
 
     @GET("tasks")
     suspend fun tasks(): List<PendingTaskFullDto>
+
+    @GET("reproduction/summary")
+    suspend fun reproductionSummary(): ReproductionSummaryDto
 }

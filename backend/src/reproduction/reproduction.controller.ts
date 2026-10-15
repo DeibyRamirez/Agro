@@ -12,6 +12,11 @@ import { ReproductionService } from './reproduction.service';
 export class ReproductionController {
   constructor(private readonly reproductionService: ReproductionService) {}
 
+  @Get('summary')
+  summary(@CurrentUser() user: AuthUser) {
+    return this.reproductionService.summary(user.fincaId);
+  }
+
   @Get()
   findAll(@CurrentUser() user: AuthUser) {
     return this.reproductionService.findAll(user.fincaId);

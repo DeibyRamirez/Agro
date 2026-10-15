@@ -1,5 +1,7 @@
 # Diseño — AgroGest / AgroControl
 
+> **Documentación vigente para entrega:** [`docs/ENTREGA.md`](docs/ENTREGA.md). Especificación UI actual en [`docs/design/00-README.md`](docs/design/00-README.md).
+
 Referencia Figma: [AgroGest](https://www.figma.com/design/WeMBtK1xWP0qNTtwllbwcL/AgroGest?node-id=0-1)
 
 Detalle de mapeo pantalla ↔ código: [docs/DESIGN_FIGMA_MAPPING.md](docs/DESIGN_FIGMA_MAPPING.md)

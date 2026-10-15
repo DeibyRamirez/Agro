@@ -14,6 +14,18 @@ enum ProductType {
   OTRO
 }
 
+enum JornadaOrdeno {
+  MANANA
+  TARDE
+}
+
+enum ReproEventType {
+  CELO
+  INSEMINACION
+  DIAGNOSTICO
+  PARTO
+}
+
 enum TaskType {
   POTRERO
   ANIMAL
@@ -30,6 +42,7 @@ enum SyncEntity {
   PRODUCTION_RECORD
   PENDING_TASK
   POTRERO
+  REPRODUCTION_EVENT
 }
 
 model User {
@@ -81,17 +94,21 @@ model Animal {
 }
 
 model Potrero {
-  id               String   @id @default(uuid())
-  fincaId          String
-  finca            Finca    @relation(fields: [fincaId], references: [id], onDelete: Restrict)
-  nombre           String
-  areaHectareas    Float?
-  estado           String   @default("ACTIVO")
-  especiesPermitidas Json   @default("[]")
-  syncVersion      Int      @default(1)
-  createdAt        DateTime @default(now())
-  updatedAt        DateTime @updatedAt
-  assignments      AnimalPotrero[]
+  id                   String    @id @default(uuid())
+  fincaId              String
+  finca                Finca     @relation(fields: [fincaId], references: [id], onDelete: Restrict)
+  nombre               String
+  areaHectareas        Float?
+  estado               String    @default("DISPONIBLE")
+  tipoPasto            String?
+  fechaUltimaSiembra   DateTime? @db.Date
+  fechaProximoUso      DateTime? @db.Date
+  observacion          String    @default("")
+  especiesPermitidas   Json      @default("[]")
+  syncVersion          Int       @default(1)
+  createdAt            DateTime  @default(now())
+  updatedAt            DateTime  @updatedAt
+  assignments          AnimalPotrero[]
 
   @@unique([fincaId, nombre])
 }
@@ -107,36 +124,39 @@ model AnimalPotrero {
 }
 
 model ProductionRecord {
-  id          String      @id @default(uuid())
+  id          String         @id @default(uuid())
   fincaId     String
-  finca       Finca       @relation(fields: [fincaId], references: [id], onDelete: Restrict)
+  finca       Finca          @relation(fields: [fincaId], references: [id], onDelete: Restrict)
   animalId    String?
-  animal      Animal?     @relation(fields: [animalId], references: [id], onDelete: SetNull)
+  animal      Animal?        @relation(fields: [animalId], references: [id], onDelete: SetNull)
   productType ProductType
   cantidad    Float
   unidad      String
-  fecha       DateTime    @db.Date
-  notas       String      @default("")
-  syncVersion Int         @default(1)
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
+  fecha       DateTime       @db.Date
+  jornada     JornadaOrdeno  @default(MANANA)
+  notas       String         @default("")
+  syncVersion Int            @default(1)
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
 
   @@index([fincaId, fecha])
+  @@unique([fincaId, animalId, fecha, jornada])
 }
 
 model ReproductionEvent {
-  id          String   @id @default(uuid())
+  id          String         @id @default(uuid())
   fincaId     String
-  finca       Finca    @relation(fields: [fincaId], references: [id], onDelete: Restrict)
+  finca       Finca          @relation(fields: [fincaId], references: [id], onDelete: Restrict)
   animalId    String
-  animal      Animal   @relation(fields: [animalId], references: [id], onDelete: Cascade)
-  tipoEvento  String
-  programada  DateTime @db.Date
-  realizada   DateTime? @db.Date
-  notas       String   @default("")
-  syncVersion Int      @default(1)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  animal      Animal         @relation(fields: [animalId], references: [id], onDelete: Cascade)
+  tipoEvento  ReproEventType
+  programada  DateTime       @db.Date
+  realizada   DateTime?      @db.Date
+  notas       String         @default("")
+  datosJson   Json           @default("{}")
+  syncVersion Int            @default(1)
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
 }
 
 model PendingTask {
@@ -148,6 +168,8 @@ model PendingTask {
   status      TaskStatus @default(PENDING)
   vencimiento DateTime   @db.Date
   referencia  String     @default("")
+  workType    String?
+  observacion String     @default("")
   syncVersion Int        @default(1)
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt

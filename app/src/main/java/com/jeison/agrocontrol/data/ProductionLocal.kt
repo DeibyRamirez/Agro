@@ -11,6 +11,10 @@ data class ProductionLocal(
     val cantidad: Double,
     val unidad: String,
     val fecha: String,
+    val jornada: String,
+    val animalServerId: String,
+    val animalCodigo: String,
     val notas: String,
+    val syncState: String = "SYNCED",
     val updatedAtEpoch: Long,
 )

@@ -6,4 +6,10 @@
     </style>
 
     <style name="Theme.AgroControl" parent="Base.Theme.AgroControl" />
+
+    <style name="Theme.AgroControl.Splash" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">#2E6B30</item>
+        <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher</item>
+        <item name="postSplashScreenTheme">@style/Theme.AgroControl</item>
+    </style>
 </resources>

@@ -1,4 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { Prisma, ReproEventType } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateReproductionDto } from './reproduction.dto';
 
@@ -9,7 +10,7 @@ export class ReproductionService {
   findAll(fincaId: string) {
     return this.prisma.reproductionEvent.findMany({
       where: { fincaId },
-      orderBy: { programada: 'asc' },
+      orderBy: { programada: 'desc' },
       include: { animal: true },
     });
   }
@@ -18,6 +19,42 @@ export class ReproductionService {
     const e = await this.prisma.reproductionEvent.findFirst({ where: { id, fincaId } });
     if (!e) throw new NotFoundException('Evento no encontrado');
     return e;
+  }
+
+  async summary(fincaId: string) {
+    const events = await this.prisma.reproductionEvent.findMany({
+      where: { fincaId },
+      orderBy: { programada: 'desc' },
+    });
+    const now = new Date();
+    const threeDaysAgo = new Date(now);
+    threeDaysAgo.setDate(threeDaysAgo.getDate() - 3);
+    const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+
+    const byAnimal = new Map<string, typeof events>();
+    for (const e of events) {
+      const list = byAnimal.get(e.animalId) ?? [];
+      list.push(e);
+      byAnimal.set(e.animalId, list);
+    }
+
+    let enCelo = 0;
+    let inseminadas = 0;
+    let gestantes = 0;
+    let partosMes = 0;
+
+    for (const e of events) {
+      if (e.tipoEvento === ReproEventType.CELO && e.programada >= threeDaysAgo) enCelo++;
+      if (e.tipoEvento === ReproEventType.PARTO && e.programada >= monthStart) partosMes++;
+    }
+
+    for (const [, animalEvents] of byAnimal) {
+      const latest = animalEvents[0];
+      if (latest.tipoEvento === ReproEventType.INSEMINACION) inseminadas++;
+      else if (latest.tipoEvento === ReproEventType.DIAGNOSTICO) gestantes++;
+    }
+
+    return { enCelo, inseminadas, gestantes, partosMes };
   }
 
   create(fincaId: string, dto: CreateReproductionDto) {
@@ -29,6 +66,7 @@ export class ReproductionService {
         programada: new Date(dto.programada),
         realizada: dto.realizada ? new Date(dto.realizada) : null,
         notas: dto.notas ?? '',
+        datosJson: (dto.datos ?? {}) as Prisma.InputJsonValue,
       },
     });
   }
@@ -42,6 +80,7 @@ export class ReproductionService {
         programada: dto.programada ? new Date(dto.programada) : undefined,
         realizada: dto.realizada ? new Date(dto.realizada) : undefined,
         notas: dto.notas,
+        datosJson: dto.datos as Prisma.InputJsonValue | undefined,
         syncVersion: { increment: 1 },
       },
     });

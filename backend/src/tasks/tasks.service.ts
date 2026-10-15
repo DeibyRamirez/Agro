@@ -3,6 +3,13 @@ import { TaskStatus } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateTaskDto } from './tasks.dto';
 
+function buildTitulo(dto: CreateTaskDto): string {
+  if (dto.titulo?.trim()) return dto.titulo.trim();
+  const work = dto.workType ?? 'Trabajo';
+  const ref = dto.referencia?.trim() ?? '';
+  return ref ? `${work} ${ref}` : work;
+}
+
 @Injectable()
 export class TasksService {
   constructor(private readonly prisma: PrismaService) {}
@@ -24,10 +31,12 @@ export class TasksService {
     return this.prisma.pendingTask.create({
       data: {
         fincaId,
-        titulo: dto.titulo,
+        titulo: buildTitulo(dto),
         tipo: dto.tipo,
         vencimiento: new Date(dto.vencimiento),
         referencia: dto.referencia ?? '',
+        workType: dto.workType,
+        observacion: dto.observacion ?? '',
       },
     });
   }

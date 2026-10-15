@@ -22,4 +22,10 @@ interface SyncDao {
 
     @Query("SELECT * FROM sync_metadata WHERE key = :key LIMIT 1")
     suspend fun getMetadata(key: String): SyncMetadata?
+
+    @Query("DELETE FROM sync_outbox")
+    suspend fun clearOutbox()
+
+    @Query("DELETE FROM sync_metadata WHERE key = :key")
+    suspend fun deleteMetadata(key: String)
 }
